@@ -3,24 +3,24 @@
 # Setup SSH from environment variable (private key)
 # Usage: pass GITLAB_SSH_PRIVATE_KEY at docker run time
 if [ -n "$GITLAB_SSH_PRIVATE_KEY" ]; then
-    mkdir -p /root/.ssh
-    echo "$GITLAB_SSH_PRIVATE_KEY" > /root/.ssh/id_ed25519
-    chmod 600 /root/.ssh/id_ed25519
+    mkdir -p ~/.ssh
+    echo "$GITLAB_SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    chmod 600 ~/.ssh/id_ed25519
 
     if [ -n "$GITLAB_SSH_PUBKEY" ]; then
-        echo "$GITLAB_SSH_PUBKEY" > /root/.ssh/id_ed25519.pub
-        chmod 644 /root/.ssh/id_ed25519.pub
+        echo "$GITLAB_SSH_PUBKEY" > ~/.ssh/id_ed25519.pub
+        chmod 644 ~/.ssh/id_ed25519.pub
     fi
 
     # Auto-accept GitLab host key
-    ssh-keyscan -t ed25519 gitlab.ystura.com >> /root/.ssh/known_hosts 2>/dev/null
+    ssh-keyscan -t ed25519 gitlab.ystura.com >> ~/.ssh/known_hosts 2>/dev/null
 
-    cat > /root/.ssh/config <<EOF
+    cat > ~/.ssh/config <<EOF
 Host gitlab.ystura.com
-    IdentityFile /root/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_ed25519
     StrictHostKeyChecking accept-new
 EOF
-    chmod 600 /root/.ssh/config
+    chmod 600 ~/.ssh/config
 fi
 
 # ttyd auth (optional)

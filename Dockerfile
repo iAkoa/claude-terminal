@@ -113,22 +113,38 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 ENV GITLAB_SSH_PUBKEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ4jnevLnbgDjulNQfmnmc8ZDxPi2css9opevYWNnvA+ gitlab-ystura"
 
 # ============================================
+# Non-root user (Claude Code refuses --dangerously-skip-permissions as root)
+# ============================================
+RUN useradd -m -s /bin/zsh -G sudo claude \
+    && echo "claude ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Copy tools installed in /root to claude user
+RUN cp -r /root/.bun /home/claude/.bun \
+    && cp -r /root/.local /home/claude/.local \
+    && cp -r /root/.oh-my-zsh /home/claude/.oh-my-zsh \
+    && chown -R claude:claude /home/claude
+
+ENV BUN_INSTALL="/home/claude/.bun"
+ENV PATH="/home/claude/.bun/bin:/home/claude/.local/bin:$PATH"
+
+# ============================================
 # Volumes & workspace
 # ============================================
-RUN mkdir -p /root/.claude /workspace
-VOLUME ["/root/.claude", "/workspace"]
+RUN mkdir -p /home/claude/.claude /workspace \
+    && chown -R claude:claude /home/claude/.claude /workspace
+VOLUME ["/home/claude/.claude", "/workspace"]
 WORKDIR /workspace
 
 # ============================================
 # Config files
 # ============================================
-COPY .zshrc /root/.zshrc
-COPY .p10k.zsh /root/.p10k.zsh
+COPY .zshrc /home/claude/.zshrc
+COPY .p10k.zsh /home/claude/.p10k.zsh
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /entrypoint.sh \
+    && chown claude:claude /home/claude/.zshrc /home/claude/.p10k.zsh
 
-# Default shell = zsh
-RUN chsh -s /bin/zsh
+USER claude
 
 EXPOSE 7681
 
