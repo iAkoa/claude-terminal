@@ -7,6 +7,8 @@ if [ ! -f ~/.claude.json ]; then
   "numStartups": 1,
   "installMethod": "npm",
   "autoUpdates": false,
+  "hasCompletedOnboarding": true,
+  "lastOnboardingVersion": "2.1.63",
   "hasSeenTasksHint": true,
   "tipsHistory": {
     "new-user-warmup": 1,
