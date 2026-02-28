@@ -9,7 +9,9 @@ RUN wget -qO /usr/local/bin/ttyd https://github.com/tsl0922/ttyd/releases/downlo
 
 RUN npm install -g @anthropic-ai/claude-code
 
-RUN mkdir -p /workspace
+# Persistent directories for auth and workspace
+RUN mkdir -p /root/.claude /workspace
+VOLUME ["/root/.claude", "/workspace"]
 WORKDIR /workspace
 
 EXPOSE 7681
