@@ -65,6 +65,13 @@ if [ -n "$TTYD_USERNAME" ] && [ -n "$TTYD_PASSWORD" ]; then
     AUTH_FLAG="-c ${TTYD_USERNAME}:${TTYD_PASSWORD}"
 fi
 
+# Export API auth as real env vars (Claude Code reads these at startup, before settings.json)
+export ANTHROPIC_AUTH_TOKEN="${ANTHROPIC_API_KEY}"
+export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL}"
+export API_TIMEOUT_MS="${API_TIMEOUT_MS:-300000}"
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+export DISABLE_AUTOUPDATER=1
+
 # Lock into Claude Code - auto-restart on exit
 exec ttyd --writable --port 7681 $AUTH_FLAG zsh -c '
 while true; do
