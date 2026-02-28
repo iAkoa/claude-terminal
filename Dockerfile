@@ -112,6 +112,9 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 # ============================================
 ENV GITLAB_SSH_PUBKEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ4jnevLnbgDjulNQfmnmc8ZDxPi2css9opevYWNnvA+ gitlab-ystura"
 
+# Disable auto-updater in container
+ENV DISABLE_AUTOUPDATER=1
+
 # ============================================
 # Non-root user (Claude Code refuses --dangerously-skip-permissions as root)
 # ============================================

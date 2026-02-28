@@ -1,5 +1,37 @@
 #!/bin/zsh
 
+# Pre-configure Claude Code to skip onboarding wizard
+if [ ! -f ~/.claude.json ]; then
+    cat > ~/.claude.json <<'CONF'
+{
+  "numStartups": 1,
+  "installMethod": "npm",
+  "autoUpdates": false,
+  "hasSeenTasksHint": true,
+  "tipsHistory": {
+    "new-user-warmup": 1,
+    "theme-command": 1,
+    "memory-command": 1
+  }
+}
+CONF
+fi
+
+if [ ! -f ~/.claude/settings.json ]; then
+    mkdir -p ~/.claude
+    cat > ~/.claude/settings.json <<'CONF'
+{
+  "permissions": {
+    "allow": [],
+    "deny": []
+  },
+  "env": {
+    "DISABLE_AUTOUPDATER": "1"
+  }
+}
+CONF
+fi
+
 # Setup SSH from environment variable (private key)
 # Usage: pass GITLAB_SSH_PRIVATE_KEY at docker run time
 if [ -n "$GITLAB_SSH_PRIVATE_KEY" ]; then
