@@ -19,13 +19,17 @@ fi
 
 if [ ! -f ~/.claude/settings.json ]; then
     mkdir -p ~/.claude
-    cat > ~/.claude/settings.json <<'CONF'
+    cat > ~/.claude/settings.json <<CONF
 {
   "permissions": {
     "allow": [],
     "deny": []
   },
   "env": {
+    "ANTHROPIC_AUTH_TOKEN": "${ANTHROPIC_API_KEY}",
+    "ANTHROPIC_BASE_URL": "${ANTHROPIC_BASE_URL}",
+    "API_TIMEOUT_MS": "${API_TIMEOUT_MS:-300000}",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "DISABLE_AUTOUPDATER": "1"
   }
 }
