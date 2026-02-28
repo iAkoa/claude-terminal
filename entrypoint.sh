@@ -1,8 +1,11 @@
 #!/bin/zsh
 
-# Pre-configure Claude Code to skip onboarding wizard
-if [ ! -f ~/.claude.json ]; then
-    cat > ~/.claude.json <<'CONF'
+# ============================================
+# Claude Code configuration (always regenerated with current env vars)
+# ============================================
+
+# Skip onboarding wizard
+cat > ~/.claude.json <<'CONF'
 {
   "numStartups": 1,
   "installMethod": "npm",
@@ -17,11 +20,10 @@ if [ ! -f ~/.claude.json ]; then
   }
 }
 CONF
-fi
 
-if [ ! -f ~/.claude/settings.json ]; then
-    mkdir -p ~/.claude
-    cat > ~/.claude/settings.json <<CONF
+# Auth + settings (regenerated every start to pick up env var changes)
+mkdir -p ~/.claude
+cat > ~/.claude/settings.json <<CONF
 {
   "permissions": {
     "allow": [],
@@ -29,17 +31,24 @@ if [ ! -f ~/.claude/settings.json ]; then
   },
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "${ANTHROPIC_API_KEY}",
-    "ANTHROPIC_BASE_URL": "${ANTHROPIC_BASE_URL}",
+    "ANTHROPIC_BASE_URL": "${ANTHROPIC_BASE_URL:-https://api.z.ai/api/anthropic}",
     "API_TIMEOUT_MS": "${API_TIMEOUT_MS:-300000}",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "DISABLE_AUTOUPDATER": "1"
   }
 }
 CONF
-fi
 
-# Setup SSH from environment variable (private key)
-# Usage: pass GITLAB_SSH_PRIVATE_KEY at docker run time
+# Export as real env vars too (Claude reads these before settings.json)
+export ANTHROPIC_AUTH_TOKEN="${ANTHROPIC_API_KEY}"
+export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-https://api.z.ai/api/anthropic}"
+export API_TIMEOUT_MS="${API_TIMEOUT_MS:-300000}"
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+export DISABLE_AUTOUPDATER=1
+
+# ============================================
+# SSH setup (GitLab)
+# ============================================
 if [ -n "$GITLAB_SSH_PRIVATE_KEY" ]; then
     mkdir -p ~/.ssh
     echo "$GITLAB_SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
@@ -50,7 +59,6 @@ if [ -n "$GITLAB_SSH_PRIVATE_KEY" ]; then
         chmod 644 ~/.ssh/id_ed25519.pub
     fi
 
-    # Auto-accept GitLab host key
     ssh-keyscan -t ed25519 gitlab.ystura.com >> ~/.ssh/known_hosts 2>/dev/null
 
     cat > ~/.ssh/config <<EOF
@@ -61,20 +69,14 @@ EOF
     chmod 600 ~/.ssh/config
 fi
 
-# ttyd auth (optional)
+# ============================================
+# Launch
+# ============================================
 AUTH_FLAG=""
 if [ -n "$TTYD_USERNAME" ] && [ -n "$TTYD_PASSWORD" ]; then
     AUTH_FLAG="-c ${TTYD_USERNAME}:${TTYD_PASSWORD}"
 fi
 
-# Export API auth as real env vars (Claude Code reads these at startup, before settings.json)
-export ANTHROPIC_AUTH_TOKEN="${ANTHROPIC_API_KEY}"
-export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL}"
-export API_TIMEOUT_MS="${API_TIMEOUT_MS:-300000}"
-export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
-export DISABLE_AUTOUPDATER=1
-
-# Lock into Claude Code - auto-restart on exit
 exec ttyd --writable --port 7681 $AUTH_FLAG zsh -c '
 while true; do
     claude --dangerously-skip-permissions
