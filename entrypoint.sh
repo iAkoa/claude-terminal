@@ -30,7 +30,6 @@ cat > ~/.claude/settings.json <<CONF
     "deny": []
   },
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "${ANTHROPIC_API_KEY}",
     "ANTHROPIC_BASE_URL": "${ANTHROPIC_BASE_URL:-https://api.z.ai/api/anthropic}",
     "API_TIMEOUT_MS": "${API_TIMEOUT_MS:-300000}",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
@@ -39,8 +38,8 @@ cat > ~/.claude/settings.json <<CONF
 }
 CONF
 
-# Export as real env vars too (Claude reads these before settings.json)
-export ANTHROPIC_AUTH_TOKEN="${ANTHROPIC_API_KEY}"
+# Export as real env vars (Claude reads these before settings.json)
+# Note: only ANTHROPIC_API_KEY is used — no ANTHROPIC_AUTH_TOKEN to avoid conflict
 export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-https://api.z.ai/api/anthropic}"
 export API_TIMEOUT_MS="${API_TIMEOUT_MS:-300000}"
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
