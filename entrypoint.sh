@@ -29,4 +29,11 @@ if [ -n "$TTYD_USERNAME" ] && [ -n "$TTYD_PASSWORD" ]; then
     AUTH_FLAG="-c ${TTYD_USERNAME}:${TTYD_PASSWORD}"
 fi
 
-exec ttyd --writable --port 7681 $AUTH_FLAG zsh
+# Lock into Claude Code - auto-restart on exit
+exec ttyd --writable --port 7681 $AUTH_FLAG zsh -c '
+while true; do
+    claude --dangerously-skip-permissions
+    echo "\nClaude exited. Restarting in 2s..."
+    sleep 2
+done
+'
