@@ -86,7 +86,7 @@ RUN cp -r /root/.bun /home/claude/.bun \
     && chown -R claude:claude /home/claude
 
 ENV BUN_INSTALL="/home/claude/.bun"
-ENV PATH="/home/claude/.bun/bin:$PATH"
+ENV PATH="/home/claude/.local/bin:/home/claude/.bun/bin:$PATH"
 
 # ============================================
 # Volumes & workspace
