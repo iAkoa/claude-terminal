@@ -87,6 +87,14 @@ cat > "$CLAUDE_HOME/settings.json" <<CONF
 CONF
 
 # ============================================
+# Claude Code binary (persisted in ~/.local volume)
+# ============================================
+if [ ! -x "$HOME/.local/bin/claude" ]; then
+    echo "Installing Claude Code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+fi
+
+# ============================================
 # SSH setup (GitLab)
 # ============================================
 if [ -n "$GITLAB_SSH_PRIVATE_KEY" ]; then

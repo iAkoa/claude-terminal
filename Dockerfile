@@ -91,9 +91,9 @@ ENV PATH="/home/claude/.local/bin:/home/claude/.bun/bin:$PATH"
 # ============================================
 # Volumes & workspace
 # ============================================
-RUN mkdir -p /home/claude/.claude /workspace \
-    && chown -R claude:claude /home/claude/.claude /workspace
-VOLUME ["/home/claude/.claude", "/workspace"]
+RUN mkdir -p /home/claude/.claude /home/claude/.local /workspace \
+    && chown -R claude:claude /home/claude/.claude /home/claude/.local /workspace
+VOLUME ["/home/claude/.claude", "/home/claude/.local", "/workspace"]
 WORKDIR /workspace
 
 # ============================================
@@ -105,14 +105,11 @@ RUN chmod +x /entrypoint.sh
 USER claude
 
 # ============================================
-# Claude Code (as claude user)
-# ============================================
-RUN curl -fsSL https://claude.ai/install.sh | bash
-
-# ============================================
 # Playwright browser (as claude user)
 # ============================================
 RUN npx playwright install chromium
+
+# Claude Code is installed at runtime via entrypoint (persisted in ~/.local volume)
 
 EXPOSE 7681
 
