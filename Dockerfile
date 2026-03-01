@@ -6,24 +6,43 @@ SHELL ["/bin/bash", "-c"]
 # System packages
 # ============================================
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    zsh \
+    # Shell
+    bash \
+    less \
+    # Network & HTTP (testing)
     curl \
     wget \
+    net-tools \
+    dnsutils \
+    iputils-ping \
+    netcat-openbsd \
+    # Dev essentials
     git \
     jq \
     make \
     gcc \
     g++ \
+    # Python
     python3 \
     python3-pip \
     python3-venv \
+    # Search & file tools
     ripgrep \
     fd-find \
+    tree \
     unzip \
+    zip \
+    # Monitoring
+    htop \
+    procps \
+    # SSH & security
     openssh-client \
     ca-certificates \
     gnupg \
+    # Database clients
+    sqlite3 \
     postgresql-client \
+    # Locale
     locales \
     && rm -rf /var/lib/apt/lists/* \
     && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
