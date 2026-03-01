@@ -89,10 +89,8 @@ CONF
 # ============================================
 # Claude Code binary (persisted in ~/.local volume)
 # ============================================
-if [ ! -x "$HOME/.local/bin/claude" ]; then
-    echo "Installing Claude Code..."
-    curl -fsSL https://claude.ai/install.sh | bash
-fi
+echo "Checking Claude Code..."
+curl -fsSL https://claude.ai/install.sh | bash
 
 # ============================================
 # SSH setup (GitLab)
