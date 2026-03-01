@@ -71,11 +71,6 @@ RUN ARCH=$(uname -m) && \
     chmod +x /usr/local/bin/ttyd
 
 # ============================================
-# Claude Code (native installer)
-# ============================================
-RUN curl -fsSL https://claude.ai/install.sh | bash
-
-# ============================================
 # SSH public key
 # ============================================
 ENV GITLAB_SSH_PUBKEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ4jnevLnbgDjulNQfmnmc8ZDxPi2css9opevYWNnvA+ gitlab-ystura"
@@ -108,6 +103,11 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 USER claude
+
+# ============================================
+# Claude Code (as claude user)
+# ============================================
+RUN curl -fsSL https://claude.ai/install.sh | bash
 
 # ============================================
 # Playwright browser (as claude user)
