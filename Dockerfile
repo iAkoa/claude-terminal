@@ -47,6 +47,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
+# ============================================
+# Playwright system dependencies (chromium)
+# ============================================
+RUN npx playwright install-deps chromium
+
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
@@ -103,6 +108,11 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 USER claude
+
+# ============================================
+# Playwright browser (as claude user)
+# ============================================
+RUN npx playwright install chromium
 
 EXPOSE 7681
 
