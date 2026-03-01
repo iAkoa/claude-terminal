@@ -73,7 +73,7 @@ RUN ARCH=$(uname -m) && \
 # ============================================
 # Claude Code (native installer)
 # ============================================
-RUN curl -fsSL https://claude.ai/install.sh | sh
+RUN curl -fsSL https://claude.ai/install.sh | bash
 
 # ============================================
 # SSH public key
