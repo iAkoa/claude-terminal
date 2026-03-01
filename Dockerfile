@@ -66,9 +66,9 @@ RUN ARCH=$(uname -m) && \
     chmod +x /usr/local/bin/ttyd
 
 # ============================================
-# Claude Code
+# Claude Code (native installer)
 # ============================================
-RUN npm install -g @anthropic-ai/claude-code
+RUN curl -fsSL https://claude.ai/install.sh | sh
 
 # ============================================
 # SSH public key
